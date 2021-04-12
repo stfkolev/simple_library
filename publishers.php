@@ -48,11 +48,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach($publishers as $author) { ?>
+                                    <?php foreach($publishers as $publisher) { ?>
                                         <tr>
-                                            <td><?php echo $author['id']; ?></td>
-                                            <td><?php echo $author['name']; ?></td>
-                                            <td><?php echo $author['address']; ?></td>
+                                            <td><?php echo $publisher['id']; ?></td>
+                                            <td><?php echo $publisher['name']; ?></td>
+                                            <td><?php echo $publisher['address']; ?></td>
                                             <td>
                                                 <a href="#" class="btn btn-warning">Редактиране</a>
                                                 <a href="#" class="btn btn-danger">Изтриване</a>

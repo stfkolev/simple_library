@@ -1,8 +1,8 @@
 <?php 
     require_once './includes/config.php';
 
-    $result = $connection->query('SELECT * FROM genres');
-    $genres = $result->fetch_all(MYSQLI_ASSOC);
+    $result = $connection->query('SELECT books.id, books.title, CONCAT(authors.firstName, \' \', authors.lastName) AS authorName, publishers.name as publisherName, genres.name as genreName FROM books LEFT JOIN authors ON books.author_id = authors.id RIGHT JOIN publishers ON books.publisher_id = publishers.id JOIN genres ON books.genre_id = genres.id');
+    $books = $result->fetch_all(MYSQLI_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -12,7 +12,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>Жанрове</title>
+    <title>Книги</title>
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
@@ -25,32 +25,38 @@
     <div class="container mt-3">
         <div class="row mt-3">
             <div class="col-md">
-                <a class="btn btn-primary float-end">Добави жанр</a>
+                <a class="btn btn-primary float-end">Добави книга</a>
             </div>
         </div>
         <div class="row mt-3">
             <div class="col-md">
                 <div class="card">
                     <div class="card-header">
-                        Жанрове
+                        Книги
                     </div>
                     <div class="card-body">
 
-                        <?php if(count($genres) > 0) { ?>
+                        <?php if(count($books) > 0) { ?>
 
                             <table class="table text-center">
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Име</th>
+                                        <th>Заглавие</th>
+                                        <th>Автор</th>
+                                        <th>Жанр</th>
+                                        <th>Издателство</th>
                                         <th>Действия</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach($genres as $genre) { ?>
+                                    <?php foreach($books as $book) { ?>
                                         <tr>
-                                            <td><?php echo $genre['id']; ?></td>
-                                            <td><?php echo $genre['name']; ?></td>
+                                            <td><?php echo $book['id']; ?></td>
+                                            <td><?php echo $book['title']; ?></td>
+                                            <td><?php echo $book['authorName']; ?></td>
+                                            <td><?php echo $book['genreName']; ?></td>
+                                            <td><?php echo $book['publisherName']; ?></td>
                                             <td>
                                                 <a href="#" class="btn btn-warning">Редактиране</a>
                                                 <a href="#" class="btn btn-danger">Изтриване</a>

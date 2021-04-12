@@ -27,6 +27,16 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="genres.php">Жанрове</a>
                 </li>
+
+                <!-- Readers -->
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="readers.php">Читатели</a>
+                </li>
+
+                <!-- Books -->
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="books.php">Книги</a>
+                </li>
             </ul>
         </div>
     </div>
