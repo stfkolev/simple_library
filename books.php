@@ -25,7 +25,7 @@
     <div class="container mt-3">
         <div class="row mt-3">
             <div class="col-md">
-                <a class="btn btn-primary float-end">Добави книга</a>
+                <a href="add_book.php" class="btn btn-primary float-end">Добави книга</a>
             </div>
         </div>
         <div class="row mt-3">
