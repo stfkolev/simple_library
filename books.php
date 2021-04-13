@@ -1,8 +1,21 @@
 <?php 
     require_once './includes/config.php';
 
+    $isSuccessfullyDeleted = false;
+
     $result = $connection->query('SELECT books.id, books.title, CONCAT(authors.firstName, \' \', authors.lastName) AS authorName, publishers.name as publisherName, genres.name as genreName FROM books LEFT JOIN authors ON books.author_id = authors.id RIGHT JOIN publishers ON books.publisher_id = publishers.id JOIN genres ON books.genre_id = genres.id');
     $books = $result->fetch_all(MYSQLI_ASSOC);
+
+    if(isset($_POST['delete']) && isset($_POST['bookId'])) {
+        $bookId = htmlentities($_POST['bookId'], ENT_QUOTES, 'UTF-8');
+        $result = $connection->query("DELETE FROM books WHERE id = $bookId");
+
+        $isSuccessfullyDeleted = true;
+        
+        // Refresh List
+        $result = $connection->query('SELECT books.id, books.title, CONCAT(authors.firstName, \' \', authors.lastName) AS authorName, publishers.name as publisherName, genres.name as genreName FROM books LEFT JOIN authors ON books.author_id = authors.id RIGHT JOIN publishers ON books.publisher_id = publishers.id JOIN genres ON books.genre_id = genres.id');
+        $books = $result->fetch_all(MYSQLI_ASSOC);
+    }
 ?>
 
 <!DOCTYPE html>
@@ -22,12 +35,24 @@
     <?php include_once './includes/navbar.php'; ?>
 
     <!-- Content -->
-    <div class="container mt-3">
+    <div class="container mt-3">        
+        <?php if($isSuccessfullyDeleted) { ?>
+            <div class="row mt-3">
+                <div class="col-md">
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>Поздравления!</strong> Успешно изтрихте една книга!
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+        <?php } ?>
+
         <div class="row mt-3">
             <div class="col-md">
                 <a href="add_book.php" class="btn btn-primary float-end">Добави книга</a>
             </div>
         </div>
+        
         <div class="row mt-3">
             <div class="col-md">
                 <div class="card">
@@ -52,14 +77,18 @@
                                 <tbody>
                                     <?php foreach($books as $book) { ?>
                                         <tr>
-                                            <td><?php echo $book['id']; ?></td>
-                                            <td><?php echo $book['title']; ?></td>
-                                            <td><?php echo $book['authorName']; ?></td>
-                                            <td><?php echo $book['genreName']; ?></td>
-                                            <td><?php echo $book['publisherName']; ?></td>
+                                            <td><?= $book['id']; ?></td>
+                                            <td><?= $book['title']; ?></td>
+                                            <td><?= $book['authorName']; ?></td>
+                                            <td><?= $book['genreName']; ?></td>
+                                            <td><?= $book['publisherName']; ?></td>
                                             <td>
-                                                <a href="#" class="btn btn-warning">Редактиране</a>
-                                                <a href="#" class="btn btn-danger">Изтриване</a>
+                                                <a href="edit_book.php?id=<?= $book['id']?>" class="btn btn-warning">Редактиране</a>
+                                                <form method="POST" style="display: inline-block">
+                                                    <input type="hidden" name="bookId" value="<?= $book['id']; ?>">
+                                                    <button name="delete" class="btn btn-danger">Изтриване</button>
+                                                    
+                                                </form>
                                             </td>
                                         </tr>
                                     <?php } ?>
