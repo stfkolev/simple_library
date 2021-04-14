@@ -3,6 +3,20 @@
 
     $result = $connection->query('SELECT * FROM readers');
     $readers = $result->fetch_all(MYSQLI_ASSOC);
+    $isSuccessfullyDeleted = false;
+
+    if(isset($_POST['delete']) && isset($_POST['readerId'])) {
+        $readerId = htmlentities($_POST['readerId'], ENT_QUOTES, 'UTF-8');
+
+        $result = $connection->query("DELETE FROM readers WHERE id = $readerId");
+        $result = $connection->query("DELETE FROM book_reader WHERE reader_id = $readerId"); // Delete cascades
+
+        $isSuccessfullyDeleted = true;
+        
+        // Refresh List
+        $result = $connection->query('SELECT * FROM readers');
+        $readers = $result->fetch_all(MYSQLI_ASSOC);
+    }
 ?>
 
 <!DOCTYPE html>
@@ -23,9 +37,20 @@
 
     <!-- Content -->
     <div class="container mt-3">
+        <?php if($isSuccessfullyDeleted) { ?>
+            <div class="row mt-3">
+                <div class="col-md">
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>Поздравления!</strong> Успешно изтрихте една книга!
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+        <?php } ?>
+
         <div class="row mt-3">
             <div class="col-md">
-                <a class="btn btn-primary float-end">Добави читател</a>
+                <a href="add_reader.php" class="btn btn-primary float-end">Добави читател</a>
             </div>
         </div>
         <div class="row mt-3">
@@ -60,8 +85,12 @@
                                             <td><?php echo $reader['UCN']; ?></td>
                                             <td><?php echo $reader['work']; ?></td>
                                             <td>
-                                                <a href="#" class="btn btn-warning">Редактиране</a>
-                                                <a href="#" class="btn btn-danger">Изтриване</a>
+                                                <a href="edit_reader.php?id=<?= $reader['id']?>" class="btn btn-warning">Редактиране</a>
+                                                <form method="POST" style="display: inline-block">
+                                                    <input type="hidden" name="readerId" value="<?= $reader['id']; ?>">
+                                                    <button name="delete" class="btn btn-danger">Изтриване</button>
+                                                    
+                                                </form>
                                             </td>
                                         </tr>
                                     <?php } ?>
