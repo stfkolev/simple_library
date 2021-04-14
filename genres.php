@@ -3,6 +3,18 @@
 
     $result = $connection->query('SELECT * FROM genres');
     $genres = $result->fetch_all(MYSQLI_ASSOC);
+    $isSuccessfullyDeleted = false;
+
+    if(isset($_POST['delete']) && isset($_POST['genreId'])) {
+        $genreId = htmlentities($_POST['genreId'], ENT_QUOTES, 'UTF-8');
+        $result = $connection->query("DELETE FROM genres WHERE id = $genreId");
+
+        $isSuccessfullyDeleted = true;
+        
+        // Refresh List
+        $result = $connection->query('SELECT * FROM genres');
+        $genres = $result->fetch_all(MYSQLI_ASSOC);
+    }
 ?>
 
 <!DOCTYPE html>
@@ -23,9 +35,20 @@
 
     <!-- Content -->
     <div class="container mt-3">
+        <?php if($isSuccessfullyDeleted) { ?>
+            <div class="row mt-3">
+                <div class="col-md">
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>Поздравления!</strong> Успешно изтрихте един жанр!
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+        <?php } ?>
+
         <div class="row mt-3">
             <div class="col-md">
-                <a class="btn btn-primary float-end">Добави жанр</a>
+                <a href="add_genre.php" class="btn btn-primary float-end">Добави жанр</a>
             </div>
         </div>
         <div class="row mt-3">
@@ -52,8 +75,11 @@
                                             <td><?php echo $genre['id']; ?></td>
                                             <td><?php echo $genre['name']; ?></td>
                                             <td>
-                                                <a href="#" class="btn btn-warning">Редактиране</a>
-                                                <a href="#" class="btn btn-danger">Изтриване</a>
+                                                <a href="edit_genre.php?id=<?= $genre['id']?>" class="btn btn-warning">Редактиране</a>
+                                                <form method="POST" style="display: inline-block">
+                                                    <input type="hidden" name="genreId" value="<?= $genre['id']; ?>">
+                                                    <button name="delete" class="btn btn-danger">Изтриване</button>
+                                                </form>
                                             </td>
                                         </tr>
                                     <?php } ?>

@@ -77,13 +77,6 @@
         </div>
         <?php } ?>
 
-        <div class="row mt-3">
-            <div class="col-md">
-                <a href="books.php" class="btn btn-primary float-start">Назад</a>
-            </div>
-        </div>
-
-
         <?php if(count($errors) > 0) { ?>
         <div class="row mt-3">
             <div class="col-md">
@@ -97,6 +90,12 @@
 
         <div class="row mt-3">
             <div class="col-md">
+                <a href="books.php" class="btn btn-primary float-start">Назад</a>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md">
                 <div class="card">
                     <div class="card-header">
                         Редактиране на книга
@@ -105,8 +104,8 @@
                         <form method="POST">
 
                             <div class="mb-3">
-                                <label for="bookTitle" class="form-label">ID на книгата</label>
-                                <input type="text" class="form-control" id="bookTitle" name="bookTitle" value="<?= $currentBook['id'] ?>" disabled>
+                                <label for="bookId" class="form-label">ID на книгата</label>
+                                <input type="text" class="form-control" id="bookId" name="bookId" value="<?= $currentBook['id'] ?>" disabled>
                             </div>
 
                             <div class="mb-3">
