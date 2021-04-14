@@ -7,20 +7,21 @@
     if(isset($_GET['id'])) {
         $id = htmlentities($_GET['id'], ENT_QUOTES, 'UTF-8');
         
-        $result = $connection->query("SELECT * FROM genres WHERE id = $id");
-        $currentGenre = $result->fetch_assoc();
+        $result = $connection->query("SELECT * FROM publishers WHERE id = $id");
+        $currentPublisher = $result->fetch_assoc();
     }
 
-    if(isset($_POST['updateGenre'])) {
-        $id = $currentGenre['id'];
+    if(isset($_POST['updatePublisher'])) {
+        $id = $currentPublisher['id'];
 
-        $genreName = htmlentities($_POST['genreName'], ENT_QUOTES, 'UTF-8');
+        $publisherName = htmlentities($_POST['publisherName'], ENT_QUOTES, 'UTF-8');
+        $publisherAddress = htmlentities($_POST['publisherAddress'], ENT_QUOTES, 'UTF-8');
 
-        $isRecordSuccessfullyUpdated = $connection->query("UPDATE genres SET name = '$genreName' WHERE id = $id");
+        $isRecordSuccessfullyUpdated = $connection->query("UPDATE publishers SET name = '$publisherName', address = '$publisherAddress' WHERE id = $id");
 
         // Refersh Current Genre information
-        $result = $connection->query("SELECT * FROM genres WHERE id = $id");
-        $currentGenre = $result->fetch_assoc();
+        $result = $connection->query("SELECT * FROM publishers WHERE id = $id");
+        $currentPublisher = $result->fetch_assoc();
     }
 ?>
 
@@ -46,7 +47,7 @@
         <div class="row mt-3">
             <div class="col-md">
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <strong>Поздравления!</strong> Успешно редактирахте жанра!
+                    <strong>Поздравления!</strong> Успешно редактирахте издателството!
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             </div>
@@ -55,7 +56,7 @@
 
         <div class="row mt-3">
             <div class="col-md">
-                <a href="genres.php" class="btn btn-primary float-start">Назад</a>
+                <a href="publishers.php" class="btn btn-primary float-start">Назад</a>
             </div>
         </div>
 
@@ -75,22 +76,27 @@
             <div class="col-md">
                 <div class="card">
                     <div class="card-header">
-                        Редактиране на жанр
+                        Редактиране на издателство
                     </div>
                     <div class="card-body">
                         <form method="POST">
 
                             <div class="mb-3">
-                                <label for="genreId" class="form-label">ID на жанра</label>
-                                <input type="text" class="form-control" id="genreId" name="genreId" value="<?= $currentGenre['id'] ?>" disabled>
+                                <label for="publisherId" class="form-label">ID на издателство</label>
+                                <input type="text" class="form-control" id="publisherId" name="publisherId" value="<?= $currentPublisher['id'] ?>" disabled>
                             </div>
 
                             <div class="mb-3">
-                                <label for="genreName" class="form-label">Име на жанра</label>
-                                <input type="text" class="form-control" id="genreName" name="genreName" value="<?= $currentGenre['name'] ?>" required>
+                                <label for="publisherName" class="form-label">Име на издателство</label>
+                                <input type="text" class="form-control" id="publisherName" name="publisherName" value="<?= $currentPublisher['name'] ?>" required>
                             </div>
 
-                            <button type="submit" name="updateGenre" class="btn btn-primary">Запазване</button>
+                            <div class="mb-3">
+                                <label for="publisherAddress" class="form-label">Адрес на издателство</label>
+                                <input type="text" class="form-control" id="publisherAddress" name="publisherAddress" value="<?= $currentPublisher['address'] ?>" required>
+                            </div>
+
+                            <button type="submit" name="updatePublisher" class="btn btn-primary">Запазване</button>
 
                         </form>
                     </div>

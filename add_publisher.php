@@ -2,25 +2,13 @@
     require_once './includes/config.php';
 
     $errors = [];
-    $isRecordSuccessfullyUpdated = false;
+    $isRecordSuccessfullyAdded = false;
 
-    if(isset($_GET['id'])) {
-        $id = htmlentities($_GET['id'], ENT_QUOTES, 'UTF-8');
-        
-        $result = $connection->query("SELECT * FROM genres WHERE id = $id");
-        $currentGenre = $result->fetch_assoc();
-    }
+    if(isset($_POST['createPublisher'])) {
+        $publisherName = htmlentities($_POST['publisherName'], ENT_QUOTES, 'UTF-8');
+        $publisherAddress = htmlentities($_POST['publisherAddress'], ENT_QUOTES, 'UTF-8');
 
-    if(isset($_POST['updateGenre'])) {
-        $id = $currentGenre['id'];
-
-        $genreName = htmlentities($_POST['genreName'], ENT_QUOTES, 'UTF-8');
-
-        $isRecordSuccessfullyUpdated = $connection->query("UPDATE genres SET name = '$genreName' WHERE id = $id");
-
-        // Refersh Current Genre information
-        $result = $connection->query("SELECT * FROM genres WHERE id = $id");
-        $currentGenre = $result->fetch_assoc();
+        $isRecordSuccessfullyAdded = $connection->query("INSERT INTO publishers (name, address) VALUES('$publisherName', '$publisherAddress')");
     }
 ?>
 
@@ -31,7 +19,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>Редактиране на жанр</title>
+    <title>Добавяне на издателство</title>
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
@@ -42,23 +30,16 @@
 
     <!-- Content -->
     <div class="container mt-3">
-        <?php if($isRecordSuccessfullyUpdated) { ?>
+        <?php if($isRecordSuccessfullyAdded) { ?>
         <div class="row mt-3">
             <div class="col-md">
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <strong>Поздравления!</strong> Успешно редактирахте жанра!
+                    <strong>Поздравления!</strong> Успешно добавихте издателство!
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             </div>
         </div>
         <?php } ?>
-
-        <div class="row mt-3">
-            <div class="col-md">
-                <a href="genres.php" class="btn btn-primary float-start">Назад</a>
-            </div>
-        </div>
-
 
         <?php if(count($errors) > 0) { ?>
         <div class="row mt-3">
@@ -73,24 +54,30 @@
 
         <div class="row mt-3">
             <div class="col-md">
+                <a href="publishers.php" class="btn btn-primary float-start">Назад</a>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md">
                 <div class="card">
                     <div class="card-header">
-                        Редактиране на жанр
+                        Добавяне на издателство
                     </div>
                     <div class="card-body">
                         <form method="POST">
 
                             <div class="mb-3">
-                                <label for="genreId" class="form-label">ID на жанра</label>
-                                <input type="text" class="form-control" id="genreId" name="genreId" value="<?= $currentGenre['id'] ?>" disabled>
+                                <label for="publisherName" class="form-label">Име на издателството</label>
+                                <input type="text" class="form-control" id="publisherName" name="publisherName" required>
                             </div>
 
                             <div class="mb-3">
-                                <label for="genreName" class="form-label">Име на жанра</label>
-                                <input type="text" class="form-control" id="genreName" name="genreName" value="<?= $currentGenre['name'] ?>" required>
+                                <label for="publisherAddress" class="form-label">Адрес на издателството</label>
+                                <input type="text" class="form-control" id="publisherAddress" name="publisherAddress" required>
                             </div>
 
-                            <button type="submit" name="updateGenre" class="btn btn-primary">Запазване</button>
+                            <button type="submit" name="createPublisher" class="btn btn-primary">Създаване</button>
 
                         </form>
                     </div>

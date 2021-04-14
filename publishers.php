@@ -3,6 +3,17 @@
 
     $result = $connection->query('SELECT * FROM publishers');
     $publishers = $result->fetch_all(MYSQLI_ASSOC);
+
+    if(isset($_POST['delete']) && isset($_POST['publisherId'])) {
+        $publisherId = htmlentities($_POST['publisherId'], ENT_QUOTES, 'UTF-8');
+        $result = $connection->query("DELETE FROM publishers WHERE id = $publisherId");
+
+        $isSuccessfullyDeleted = true;
+        
+        // Refresh List
+        $result = $connection->query('SELECT * FROM publishers');
+        $publishers = $result->fetch_all(MYSQLI_ASSOC);
+    }
 ?>
 
 <!DOCTYPE html>
@@ -25,7 +36,7 @@
     <div class="container mt-3">
         <div class="row mt-3">
             <div class="col-md">
-                <a class="btn btn-primary float-end">Добави издателство</a>
+                <a href="add_publisher.php" class="btn btn-primary float-end">Добави издателство</a>
             </div>
         </div>
         <div class="row mt-3">
@@ -54,8 +65,12 @@
                                             <td><?php echo $publisher['name']; ?></td>
                                             <td><?php echo $publisher['address']; ?></td>
                                             <td>
-                                                <a href="#" class="btn btn-warning">Редактиране</a>
-                                                <a href="#" class="btn btn-danger">Изтриване</a>
+                                                <a href="edit_publisher.php?id=<?= $publisher['id']?>" class="btn btn-warning">Редактиране</a>
+                                                <form method="POST" style="display: inline-block">
+                                                    <input type="hidden" name="publisherId" value="<?= $publisher['id']; ?>">
+                                                    <button name="delete" class="btn btn-danger">Изтриване</button>
+                                                    
+                                                </form>
                                             </td>
                                         </tr>
                                     <?php } ?>
